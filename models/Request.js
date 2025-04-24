@@ -10,6 +10,7 @@ const RequestSchema = new mongoose.Schema({
 	customService: { type: String },
 	payment: { type: String, enum: ['cash', 'card'], required: true },
 	status: { type: String, default: 'В работе' },
+	cancelReason: { type: String, default: '-' },
 	createdAt: { type: Date, default: Date.now },
 });
 

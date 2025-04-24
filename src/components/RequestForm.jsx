@@ -197,7 +197,7 @@ const RequestForm = ({ onSubmit }) => {
 						className="form-check-input"
 						type="radio"
 						name="payment"
-						value="cash"
+						value="Наличные"
 						checked={formData.payment === 'cash'}
 						onChange={handleChange}
 						id="payCash"
@@ -211,7 +211,7 @@ const RequestForm = ({ onSubmit }) => {
 						className="form-check-input"
 						type="radio"
 						name="payment"
-						value="card"
+						value="Банковская карта"
 						checked={formData.payment === 'card'}
 						onChange={handleChange}
 						id="payCard"

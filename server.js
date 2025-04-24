@@ -109,6 +109,33 @@ app.post('/getUserRequests', async (req, res) => {
 	}
 });
 
+app.get('/getAllRequests', async (req, res) => {
+	try {
+		const allRequests = await Request.find().sort({ createdAt: -1 });
+		res.status(200).json({ requests: allRequests });
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: 'Ошибка при получении всех заявок.' });
+	}
+});
+
+app.post('/updateRequestStatus', async (req, res) => {
+	try {
+		const { id, status, reason } = req.body;
+
+		const update = { status };
+		if (status === 'отменено') {
+			update.cancelReason = reason;
+		}
+
+		await Request.findByIdAndUpdate(id, update);
+		res.status(200).json({ message: 'Статус обновлен' });
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: 'Ошибка при обновлении статуса.' });
+	}
+});
+
 const PORT = 5000;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);

@@ -52,7 +52,9 @@ const LoginPage = () => {
 				await axios.post('http://localhost:5000/login', formData);
 				Cookies.set('isAuthenticated', 'true', { expires: 30 });
 				Cookies.set('user', formData.un);
-				navigate('/user');
+
+				const path = Cookies.get('user') === 'adminka' ? '/admin' : '/user';
+				navigate(path);
 			} catch (err) {
 				if (err.response && err.response.data.error) {
 					setErrors((prev) => ({

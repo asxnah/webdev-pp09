@@ -3,6 +3,7 @@ import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
 import RequestPage from './pages/RequestPage';
 import UserPage from './pages/UserPage';
+import AdminPage from './pages/AdminPage';
 import Cookies from 'js-cookie';
 
 function App() {
@@ -11,13 +12,15 @@ function App() {
 	const isAuthenticated =
 		Cookies.get('isAuthenticated') === 'true' ? true : false;
 
+	const isAdmin = Cookies.get('user') === 'adminka' ? true : false;
+
 	return (
 		<>
 			<header>
 				<nav className="navbar navbar-expand-lg bg-body-tertiary">
 					<div className="container-fluid">
 						<NavLink className="navbar-brand" to="/">
-							WebDev
+							WebDev{isAdmin && '.Adm'}
 						</NavLink>
 						<button
 							className="navbar-toggler"
@@ -32,7 +35,7 @@ function App() {
 						</button>
 						<div className="collapse navbar-collapse" id="navbarNav">
 							<ul className="navbar-nav">
-								{isAuthenticated && (
+								{isAuthenticated && !isAdmin && (
 									<li className="nav-item">
 										<NavLink
 											to="/"
@@ -69,16 +72,18 @@ function App() {
 										</NavLink>
 									</li>
 								)}
-								<li className="nav-item">
-									<NavLink
-										to="/request"
-										className={({ isActive }) =>
-											'nav-link' + (isActive ? ' active' : '')
-										}
-									>
-										Оставить заявку
-									</NavLink>
-								</li>
+								{!isAdmin && (
+									<li className="nav-item">
+										<NavLink
+											to="/request"
+											className={({ isActive }) =>
+												'nav-link' + (isActive ? ' active' : '')
+											}
+										>
+											Оставить заявку
+										</NavLink>
+									</li>
+								)}
 								{isAuthenticated && (
 									<li className="nav-item">
 										<button
@@ -104,6 +109,7 @@ function App() {
 				<Route path="/login" element={<LoginPage />} />
 				<Route path="/request" element={<RequestPage />} />
 				<Route path="/user" element={<UserPage />} />
+				<Route path="/admin" element={<AdminPage />} />
 			</Routes>
 		</>
 	);
