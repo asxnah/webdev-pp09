@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { IMaskInput } from 'react-imask';
 
-// для валидации
+// Регулярные выражения для валидации
 const regex = {
-	// минимум 5 символов (буквы, цифры, нижнее подчеркивание)
+	// минимум 5 символов
 	un: /^[a-zA-Z0-9_]{5,}$/,
-	// минимум 6 символов, включая хотя бы одну цифру
+	// минимум 6 символов, цифра + буква
 	pw: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-	// только кириллица и пробелы
+	// кириллица
 	name: /^[А-Яа-яЁё\s]+$/,
-	// формат +7(XXX)-XXX-XX-XX
+	// +7(XXX)-XXX-XX-XX
 	tel: /^\+7\(\d{3}\)-\d{3}-\d{2}-\d{2}$/,
-	// почта
-	email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
 };
 
 const RegisterPage = () => {
@@ -62,7 +62,7 @@ const RegisterPage = () => {
 				'Неверный формат телефона. Используйте формат +7(XXX)-XXX-XX-XX.';
 		}
 
-		if (!formData.email || !regex.email.test(formData.email)) {
+		if (!formData.email) {
 			newErrors.email = 'Неверный формат электронной почты.';
 		}
 
@@ -71,10 +71,22 @@ const RegisterPage = () => {
 		return Object.keys(newErrors).length === 0;
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (validateForm()) {
-			alert('Форма успешно отправлена!');
+			try {
+				const response = await axios.post(
+					'http://localhost:5000/register',
+					formData
+				);
+				alert(response.data.message);
+			} catch (err) {
+				console.error('Error:', err);
+				setErrors((prev) => ({
+					...prev,
+					general: 'Произошла ошибка. Попробуйте позже.',
+				}));
+			}
 		}
 	};
 
@@ -84,11 +96,12 @@ const RegisterPage = () => {
 			<form onSubmit={handleSubmit}>
 				<div className="mb-3">
 					<label htmlFor="un" className="form-label">
-						Логин:
+						Имя пользователя:
 					</label>
 					<input
 						type="text"
 						id="un"
+						name="un"
 						autoComplete="username"
 						className="form-control"
 						value={formData.un}
@@ -104,6 +117,7 @@ const RegisterPage = () => {
 					<input
 						type="password"
 						id="pw"
+						name="pw"
 						autoComplete="current-password"
 						className="form-control"
 						value={formData.pw}
@@ -119,6 +133,7 @@ const RegisterPage = () => {
 					<input
 						type="text"
 						id="name"
+						name="name"
 						autoComplete="name"
 						className="form-control"
 						value={formData.name}
@@ -131,13 +146,17 @@ const RegisterPage = () => {
 					<label htmlFor="tel" className="form-label">
 						Телефон:
 					</label>
-					<input
-						type="text"
+					<IMaskInput
+						mask="+7(000)-000-00-00"
+						lazy={false}
+						value={formData.tel}
+						onAccept={(value) =>
+							handleChange({ target: { name: 'tel', value } })
+						}
 						id="tel"
+						name="tel"
 						autoComplete="tel"
 						className="form-control"
-						value={formData.tel}
-						onChange={handleChange}
 					/>
 					{errors.tel && <p className="text-danger">{errors.tel}</p>}
 				</div>
@@ -149,6 +168,7 @@ const RegisterPage = () => {
 					<input
 						type="email"
 						id="email"
+						name="email"
 						autoComplete="email"
 						className="form-control"
 						value={formData.email}
