@@ -52,63 +52,67 @@ const AdminPage = () => {
 		<main className="container">
 			<h1 className="mb-3">Заявки пользователей</h1>
 			<div className="row">
-				{requests.map((request) => (
-					<div className="col-12 mb-3" key={request._id}>
-						<div className="card">
-							<div className="card-body">
-								<h5 className="card-title">{request.service}</h5>
-								<p className="card-text">
-									<b>ФИО:</b> {request.un} <br />
-									<b>Телефон:</b> {request.phone} <br />
-									<b>Адрес:</b> {request.address} <br />
-									<b>Дата и время:</b> {request.date} {request.time} <br />
-									<b>Оплата:</b> {request.payment} <br />
-									<b>Статус:</b> {request.status}
-									{request.status === 'отменено' && (
-										<p>
-											<b>Причина отмены:</b> {request.cancelReason}
-										</p>
-									)}
-								</p>
+				{requests.length > 0 ? (
+					requests.map((request) => (
+						<div className="col-12 mb-3" key={request._id}>
+							<div className="card">
+								<div className="card-body">
+									<h4 className="card-title">{request.service}</h4>
+									<p className="card-text">
+										<b>ФИО:</b> {request.un} <br />
+										<b>Телефон:</b> {request.phone} <br />
+										<b>Адрес:</b> {request.address} <br />
+										<b>Дата и время:</b> {request.date} {request.time} <br />
+										<b>Оплата:</b> {request.payment} <br />
+										<b>Статус:</b> {request.status}
+										{request.status === 'отменено' && (
+											<p>
+												<b>Причина отмены:</b> {request.cancelReason}
+											</p>
+										)}
+									</p>
 
-								<div className="mb-2">
-									<select
-										className="form-select"
-										value={selectedStatus[request._id] || ''}
-										onChange={(e) =>
-											handleStatusChange(request._id, e.target.value)
-										}
-									>
-										<option value="">Изменить статус</option>
-										<option value="выполнено">Выполнено</option>
-										<option value="отменено">Отменено</option>
-									</select>
-								</div>
-
-								{selectedStatus[request._id] === 'отменено' && (
 									<div className="mb-2">
-										<input
-											type="text"
-											className="form-control"
-											placeholder="Причина отмены"
-											value={cancelReasons[request._id] || ''}
+										<select
+											className="form-select"
+											value={selectedStatus[request._id] || ''}
 											onChange={(e) =>
-												handleCancelReasonChange(request._id, e.target.value)
+												handleStatusChange(request._id, e.target.value)
 											}
-										/>
+										>
+											<option value="">Изменить статус</option>
+											<option value="выполнено">Выполнено</option>
+											<option value="отменено">Отменено</option>
+										</select>
 									</div>
-								)}
 
-								<button
-									className="btn btn-primary"
-									onClick={() => updateStatus(request._id)}
-								>
-									Сохранить
-								</button>
+									{selectedStatus[request._id] === 'отменено' && (
+										<div className="mb-2">
+											<input
+												type="text"
+												className="form-control"
+												placeholder="Причина отмены"
+												value={cancelReasons[request._id] || ''}
+												onChange={(e) =>
+													handleCancelReasonChange(request._id, e.target.value)
+												}
+											/>
+										</div>
+									)}
+
+									<button
+										className="btn btn-primary"
+										onClick={() => updateStatus(request._id)}
+									>
+										Сохранить
+									</button>
+								</div>
 							</div>
 						</div>
-					</div>
-				))}
+					))
+				) : (
+					<p>Заявок нет.</p>
+				)}
 			</div>
 		</main>
 	);
