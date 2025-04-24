@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { IMaskInput } from 'react-imask';
+import Cookies from 'js-cookie';
 
 // Регулярные выражения для валидации
 const regex = {
@@ -15,6 +17,12 @@ const regex = {
 };
 
 const RegisterPage = () => {
+	const navigate = useNavigate();
+
+	const isAuthenticated =
+		Cookies.get('isAuthenticated') === 'true' ? true : false;
+	if (isAuthenticated) navigate('/user');
+
 	const [formData, setFormData] = useState({
 		un: '',
 		pw: '',
@@ -75,16 +83,15 @@ const RegisterPage = () => {
 		e.preventDefault();
 		if (validateForm()) {
 			try {
-				const response = await axios.post(
-					'http://localhost:5000/register',
-					formData
-				);
-				alert(response.data.message);
+				await axios.post('http://localhost:5000/register', formData);
+				Cookies.set('isAuthenticated', 'true', { expires: 30 });
+				Cookies.set('user', formData.un);
+				navigate('/user');
 			} catch (err) {
 				console.error('Error:', err);
 				setErrors((prev) => ({
 					...prev,
-					general: 'Произошла ошибка. Попробуйте позже.',
+					general: err.response.data.error,
 				}));
 			}
 		}
@@ -94,6 +101,7 @@ const RegisterPage = () => {
 		<main className="container mt-2">
 			<h1 className="text-center mb-4">Регистрация</h1>
 			<form onSubmit={handleSubmit}>
+				{errors.general && <p className="text-danger">{errors.general}</p>}
 				<div className="mb-3">
 					<label htmlFor="un" className="form-label">
 						Имя пользователя:

@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const LoginPage = () => {
+	const navigate = useNavigate();
+
+	const isAuthenticated =
+		Cookies.get('isAuthenticated') === 'true' ? true : false;
+	if (isAuthenticated) navigate('/user');
+
 	const [formData, setFormData] = useState({
 		un: '',
 		pw: '',
@@ -41,11 +49,10 @@ const LoginPage = () => {
 
 		if (validateForm()) {
 			try {
-				const response = await axios.post(
-					'http://localhost:5000/login',
-					formData
-				);
-				alert(response.data.message);
+				await axios.post('http://localhost:5000/login', formData);
+				Cookies.set('isAuthenticated', 'true', { expires: 30 });
+				Cookies.set('user', formData.un);
+				navigate('/user');
 			} catch (err) {
 				if (err.response && err.response.data.error) {
 					setErrors((prev) => ({

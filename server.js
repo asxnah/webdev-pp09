@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import User from './models/User.js';
+import Request from './models/Request.js';
 
 const app = express();
 app.use(express.json());
@@ -56,6 +57,55 @@ app.post('/login', async (req, res) => {
 	} catch (err) {
 		console.log(err);
 		res.status(500).json({ error: 'Ошибка сервера.' });
+	}
+});
+
+app.post('/request', async (req, res) => {
+	try {
+		const { un, address, phone, date, time, service, customService, payment } =
+			req.body;
+
+		const finalService = service === 'Иная услуга' ? customService : service;
+
+		if (!finalService) {
+			return res.status(400).json({ error: 'Услуга обязательна.' });
+		}
+
+		const request = new Request({
+			un,
+			address,
+			phone,
+			date,
+			time,
+			service: finalService,
+			customService: service === 'Иная услуга' ? customService : '',
+			payment,
+		});
+
+		await request.save();
+		res.status(201).json({ message: 'Заявка принята!' });
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: 'Ошибка при отправке заявки.' });
+	}
+});
+
+app.post('/getUserRequests', async (req, res) => {
+	try {
+		const { un } = req.body;
+
+		if (!un) {
+			return res.status(400).json({ error: 'Не указано имя пользователя.' });
+		}
+
+		const userRequests = await Request.find({ un }).sort({
+			createdAt: -1,
+		});
+
+		res.status(200).json({ requests: userRequests });
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({ error: 'Ошибка при получении заявок.' });
 	}
 });
 
