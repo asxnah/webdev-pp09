@@ -10,7 +10,7 @@ const UserPage = () => {
 	useEffect(() => {
 		const isAuthenticated =
 			Cookies.get('isAuthenticated') === 'true' ? true : false;
-		if (!isAuthenticated) navigate('/user');
+		if (!isAuthenticated) navigate('/');
 		if (Cookies.get('user') === 'adminka') navigate('/admin');
 	}, []);
 

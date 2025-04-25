@@ -90,7 +90,7 @@ function App() {
 								<button
 									className="btn btn-outline-dark"
 									onClick={() => {
-										Cookies.set('isAuthenticated', 'false');
+										Cookies.remove('isAuthenticated');
 										Cookies.remove('user');
 										navigate('/');
 									}}
