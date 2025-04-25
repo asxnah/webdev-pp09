@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { IMaskInput } from 'react-imask';
@@ -19,9 +19,11 @@ const regex = {
 const RegisterPage = () => {
 	const navigate = useNavigate();
 
-	const isAuthenticated =
-		Cookies.get('isAuthenticated') === 'true' ? true : false;
-	if (isAuthenticated) navigate('/user');
+	useEffect(() => {
+		const isAuthenticated =
+			Cookies.get('isAuthenticated') === 'true' ? true : false;
+		if (isAuthenticated) navigate('/user');
+	}, []);
 
 	const [formData, setFormData] = useState({
 		un: '',

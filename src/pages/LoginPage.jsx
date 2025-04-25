@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -6,9 +6,12 @@ import Cookies from 'js-cookie';
 const LoginPage = () => {
 	const navigate = useNavigate();
 
-	const isAuthenticated =
-		Cookies.get('isAuthenticated') === 'true' ? true : false;
-	if (isAuthenticated) navigate('/user');
+	useEffect(() => {
+		const isAuthenticated =
+			Cookies.get('isAuthenticated') === 'true' ? true : false;
+		if (isAuthenticated) navigate('/user');
+		if (Cookies.get('user') === 'adminka') navigate('/admin');
+	}, []);
 
 	const [formData, setFormData] = useState({
 		un: '',

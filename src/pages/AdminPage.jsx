@@ -6,7 +6,9 @@ import Cookies from 'js-cookie';
 const AdminPage = () => {
 	const navigate = useNavigate();
 
-	if (Cookies.get('user') !== 'adminka') navigate('/user');
+	useEffect(() => {
+		if (Cookies.get('user') !== 'adminka') navigate('/user');
+	}, []);
 
 	const [requests, setRequests] = useState([]);
 	const [selectedStatus, setSelectedStatus] = useState({});

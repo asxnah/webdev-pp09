@@ -7,9 +7,12 @@ import RequestForm from '../components/RequestForm';
 const UserPage = () => {
 	const navigate = useNavigate();
 
-	const isAuthenticated =
-		Cookies.get('isAuthenticated') === 'true' ? true : false;
-	if (!isAuthenticated) navigate('/user');
+	useEffect(() => {
+		const isAuthenticated =
+			Cookies.get('isAuthenticated') === 'true' ? true : false;
+		if (!isAuthenticated) navigate('/user');
+		if (Cookies.get('user') === 'adminka') navigate('/admin');
+	}, []);
 
 	const [requests, setRequests] = useState([]);
 	const user = Cookies.get('user');
