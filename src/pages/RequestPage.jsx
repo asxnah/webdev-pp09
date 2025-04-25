@@ -1,6 +1,8 @@
-import { useNavigate, useEffect } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import RequestForm from '../components/RequestForm';
 import Cookies from 'js-cookie';
+import React from 'react';
 
 const RequestPage = () => {
 	const navigate = useNavigate();
