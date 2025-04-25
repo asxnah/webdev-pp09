@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 import User from './models/User.js';
 import Request from './models/Request.js';
 
@@ -22,9 +23,12 @@ app.post('/register', async (req, res) => {
 			return res.status(400).json({ error: 'Этот логин уже занят.' });
 		}
 
+		const saltRounds = 10;
+		const hashedPassword = await bcrypt.hash(pw, saltRounds);
+
 		const user = new User({
 			un,
-			pw,
+			pw: hashedPassword,
 			name,
 			tel,
 			email,
@@ -49,7 +53,8 @@ app.post('/login', async (req, res) => {
 			return res.status(400).json({ error: 'Пользователь не найден.' });
 		}
 
-		if (user.pw !== pw) {
+		const isPasswordValid = await bcrypt.compare(pw, user.pw);
+		if (!isPasswordValid) {
 			return res.status(400).json({ error: 'Неверный пароль.' });
 		}
 
