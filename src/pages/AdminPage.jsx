@@ -49,7 +49,7 @@ const AdminPage = () => {
 	}, []);
 
 	return (
-		<main className="container">
+		<main className="container mt-2">
 			<h1 className="mb-3">Заявки пользователей</h1>
 			<div className="row">
 				{requests.length > 0 ? (
