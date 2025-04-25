@@ -117,7 +117,7 @@ const RequestForm = ({ onSubmit }) => {
 			<div className="row mb-3 alert alert-light mx-1">
 				<h4>Когда Вам перезвонить? *</h4>
 				<div className="form-text mb-2">
-					Мы постараемся это учесть перезвонить Вам в ближайшее время.
+					Мы постараемся это учесть и перезвонить Вам в ближайшее время.
 				</div>
 				<div className="col">
 					<label className="form-label">Дата</label>
