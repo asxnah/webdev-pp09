@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const AdminPage = () => {
+	const navigate = useNavigate();
+
+	if (Cookies.get('user') !== 'adminka') navigate('/user');
+
 	const [requests, setRequests] = useState([]);
 	const [selectedStatus, setSelectedStatus] = useState({});
 	const [cancelReasons, setCancelReasons] = useState({});
